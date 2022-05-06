@@ -1,0 +1,11 @@
+[webservers]
+ansible1
+ansible2
+
+[dbservers]
+ansible1
+ansible2
+
+[webservers:vars]
+ansible_python_interpreter=/usr/bin/python3
+

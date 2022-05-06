@@ -1,0 +1,9 @@
+---
+- name: managing docker hosts used in jenkins-ci
+  hosts: test_servers
+  tasks:
+    - name: start docker service
+      service:
+        name: docker
+        state: enabled
+...

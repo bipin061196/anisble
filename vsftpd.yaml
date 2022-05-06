@@ -1,0 +1,24 @@
+---
+- name: deploy vsftpd
+  hosts: all
+  tasks:
+  - name: install vsftpd
+    apt:
+      name: vsftpd
+      state: present
+  - name: enable  vsftp service
+    service:
+      name: vsftpd
+      state: stopped
+  - name: create directory
+    file:
+      path: /etc/ftp/pub
+      state: directory
+  - name: create readme file
+    copy:
+      content: "welcome to FTP server"
+      dest: /etc/ftp/pub/README
+      force: no
+      mode: 444
+...
+

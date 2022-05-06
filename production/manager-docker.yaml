@@ -1,0 +1,13 @@
+---
+- name: install and manager docker
+  hosts: all
+  tasks:
+  - name: installing docker
+    package:
+      name: docker
+      state: present
+  - name: start docker service
+    service:
+      name: docker
+      enabled: yes
+...

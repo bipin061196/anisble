@@ -1,0 +1,16 @@
+---
+- name: distro
+  hosts: all
+  gather_facts: yes
+  vars:
+    supported_distros:
+      - Debian
+      - Ubuntu
+  tasks:
+    - name: install package if condition  is met
+      apt:
+        name: jshon
+        state: present
+      when: ansible_distribution in supported_distros
+...
+

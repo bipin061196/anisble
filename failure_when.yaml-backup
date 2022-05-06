@@ -1,0 +1,10 @@
+---
+- name: test failure_when task control module
+  hosts: all
+  tasks:
+    - name: run command to print
+      command: echo hello world
+    - name: see if we get here
+      debug:
+        msg: hello we are here
+...

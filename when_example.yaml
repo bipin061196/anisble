@@ -1,0 +1,15 @@
+---
+- name: restart sshd when docker service exists
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: get docker service status
+      command: /usr/bin/systemctl is-active docker
+      register: result
+      ignore_errors: yes
+    - name: restart ssh if docker service exist
+      service:
+        name: sshd
+        state: restarted
+      when: result.rc == 0
+...

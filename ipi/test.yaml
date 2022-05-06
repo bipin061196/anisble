@@ -1,0 +1,7 @@
+---
+- name: test connection
+  hosts: iris
+  tasks:
+    - name: test connections
+      shell: "cat /root/test"
+...

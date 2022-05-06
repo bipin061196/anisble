@@ -1,0 +1,26 @@
+---
+ - hosts: precommit_build_servers
+   tasks:
+     - name: print mem and cpu
+       vars:
+         my_resources: |
+           Hostname      : {{ ansible_hostname }}
+           Distribution  : {{ ansible_distribution }}
+           IP Address    : {{ ansible_default_ipv4.address }}
+           Total Memory  : {{ ansible_memory_mb.real.total }} MB
+           CPUs          : processor_cores             = {{ ansible_processor_cores }}
+                           processor_count             = {{ ansible_processor_count }}
+                           processor_nproc             = {{ ansible_processor_nproc }}
+                           processor_threads_per_core  = {{ ansible_processor_threads_per_core }}
+                           processor_vcpus             = {{ ansible_processor_vcpus }}
+
+
+       debug:
+         msg: "{{ my_resources.split('\n') }}"
+
+     - name: disk space
+       command: df -h /
+       register: space
+     - debug:
+         var: space.stdout_lines
+...

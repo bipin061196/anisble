@@ -1,0 +1,34 @@
+---
+- name: crearte node_exporter systemd sercice in linux centos
+  hosts: precommit_build_servers
+  tasks:
+
+    - name: downloading node_exporter
+      get_url:
+        url: https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz
+        dest: /etc/node_exporter-1.3.1.linux-amd64.tar.gz
+
+    - name: extracting node_exporter tar
+      unarchive:
+        src: /etc/node_exporter-1.3.1.linux-amd64.tar.gz
+        dest: /etc/
+        remote_src: yes
+
+    - name: create node_exporter.service file
+      copy:
+        dest: /etc/systemd/system/node_exporter.service
+        content: |
+          [Unit]
+          Description= it is prometheus metric collector
+          
+          [Service]
+          User=root
+          WorkingDirectory=/etc/node_exporter-1.3.1.linux-amd64/
+          ExecStart=/etc/node_exporter-1.3.1.linux-amd64/node_exporter
+          Restart=always
+
+    - name: start node_exporter service
+      service:
+        name: node_exporter
+        state: started
+...

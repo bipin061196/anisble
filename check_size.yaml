@@ -1,0 +1,12 @@
+---
+- name: conditional test
+  gather_facts: yes
+  hosts: all
+  tasks:
+    - name: install jshon
+      package:
+        name: jshon
+        state: latest
+      loop: "{{ ansible_mounts }}"
+      when: item.mount == "/"  and item.size_available > 100000000
+...

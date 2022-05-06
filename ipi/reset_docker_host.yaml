@@ -1,0 +1,57 @@
+---
+- name: setup docker buil env
+  hosts: notus
+  gather_facts: false
+  tasks:
+  - name: restart network service
+    service:
+      name: network
+      state: restarted
+
+  - name: disabling firewall service if exist
+    service:
+      name: firewalld
+      state: stopped
+
+  - name: systemd daemon-relaod
+    systemd:
+      daemon-reload: yes
+
+  - name: Mount an /nfs01 volume
+    mount:
+      src: 10.0.0.7:/cm01
+      path: /nfs01
+      state: mounted
+      fstype: nfs
+
+  - name: docker restar
+    systemd:
+      name: docker
+      state: restarted
+
+  - name: fetching docker host data
+    docker_host_info:
+    register: docker_fact
+
+  - name: removing all docker containers
+    shell:
+      "docker stop $(docker ps -aq); docker rm $(docker ps -aq)"
+    when: docker_fact.host_info.Containers != 0
+
+  - name: pulling ocnos-5.1 docker image (this may take a while if images are not already pulled!)
+    docker_image:
+      name: docker-registry.ipinfusion.com/tanto-build/debian:ocnos-5.1
+
+  - name: pulling ocnos-5.0 docker image
+    docker_image:
+      name: docker-registry.ipinfusion.com/tanto-build/debian:ocnos-5.0
+
+  - name: apt cacher creation
+    docker_container:
+      name: ansible-apt-cacher
+      image: docker-registry.ipinfusion.com/tanto-build/apt-cacher-ng:latest
+      ports:
+      - 3142:3142
+      volumes:
+      - /var/cache/apt-cacher-ng:/var/cache/apt-cacher-ng
+...

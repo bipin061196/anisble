@@ -1,0 +1,15 @@
+---
+- name: loop services
+  hosts: all
+  vars:
+    my_services:
+      - docker
+      - sshd
+  tasks:
+    - name: start serviecs
+      service:
+        name: "{{ item }}"
+        state: started
+      loop: "{{ my_services }}"
+...
+

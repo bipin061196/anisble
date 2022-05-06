@@ -1,0 +1,20 @@
+---
+- name: managing docker hosts used in jenkins-ci
+  hosts: test_servers
+  tasks:
+    - name: systemd daemon-relaod
+      systemd:
+        daemon-reload: yes
+
+    - name: docker start
+      systemd:
+        name: docker
+        state: started
+
+    - name: run apt cacher container if not running
+      docker_container:
+        name: apt-cacher-ng_by_ansible
+        state: present
+        image: docker-registry.ipinfusion.com/tanto-build/apt-cacher-ng:latest
+...
+

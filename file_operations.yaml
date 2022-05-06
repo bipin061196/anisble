@@ -1,0 +1,26 @@
+---
+- name: file operations
+  hosts: all
+  tasks:
+    - name: copy file
+      copy:
+        src: /root/test
+        dest: /tmp/test
+    - name: adding lines to file
+      blockinfile:
+        path: /tmp/test
+        block: |
+          this is bipin
+          from IPI
+    - name: verify file checksum
+      stat:
+        path: /tmp/test
+        checksum_algorithm: md5
+      register: result
+    - debug:
+        msg: "chcksum of /root/test_dest is {{ result.stat.checksum }}"
+    - name: fetch a file
+      fetch:
+        src: /tmp/test
+        dest: /tmp
+...
